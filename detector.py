@@ -15,11 +15,14 @@ las siguientes mejoras:
     pocos valores extremos del tramo de referencia.
   - MAD se reescala con el factor 1.4826 para que, bajo hipótesis
     gaussiana, sea comparable a sigma.
-  - Se exige un número mínimo de muestras de referencia
-    (n_min_ref=20) para evitar dictar umbrales con poca información.
+   - Se exige un número mínimo de muestras de referencia
+    (configurable mediante n_min_ref) para evitar dictar umbrales
+    con poca información.
   - Se descartan las primeras 'burn_in' muestras del cálculo de la
-    detección (no del cálculo del umbral) para evitar que efectos de
-    arranque del pipeline cuenten como detección.
+    detección (no del cálculo del umbral) para evitar que efectos
+    del arranque del pipeline cuenten como detección. El valor
+    concreto se ajusta en cada experimento según la longitud de la
+    señal.
   - Para considerar válida una detección, se exige que k cruces
     consecutivos superen el umbral (parámetro 'consecutivos'). Esto
     filtra el ruido aleatorio puntual y obliga a que el cambio sea
@@ -54,7 +57,7 @@ class ResultadoDetector:
 def detector_robusto(
     senal: np.ndarray,
     *,
-    k: float = 5.0,
+    k: float = 4.0,
     frac_ref: float = 0.30,
     n_min_ref: int = 20,
     burn_in: int = 5,
@@ -71,7 +74,9 @@ def detector_robusto(
         (varianza móvil, distancia bottleneck, etc.).
     k : float, opcional
         Número de MADs por encima de la mediana que define el umbral.
-        Valor típico: 5 (más estricto que 3, robusto frente a outliers).
+        Valor por defecto: 4, intermedio entre el clásico 3 (más
+        sensible y propenso a falsos positivos) y el más estricto 5.
+        En los experimentos del TFG se utiliza siempre k=4. 
     frac_ref : float, opcional
         Fracción inicial de la señal usada como tramo de referencia.
     n_min_ref : int, opcional

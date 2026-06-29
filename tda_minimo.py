@@ -130,7 +130,10 @@ def calcular_persistencia(simplices):
         if i in nacedores or i in morideros:
             continue
         if columnas[i]:
-            continue  # columna no nula tras reducción: no debería pasar
+            continue  # cortaguegos: si la reducción dejara una columna no nula,
+            # la ignoramos. Bajo el algoritmo correcto no debe ocurrir,
+            # pero el chequeo evita falsos infinitos si la nube de
+            # entrada tiene puntos duplicados u otras patologías.
         d_sigma = dim[sigma]
         if d_sigma == 0:
             diagrama_h0.append((f, np.inf))

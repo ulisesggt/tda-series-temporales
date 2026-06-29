@@ -1,5 +1,13 @@
 # Código del TFG: análisis topológico de series temporales
 
+> Trabajo de Fin de Grado en Ingeniería Matemática.  
+> **CUNEF Universidad** — Curso 2025-26.
+>
+> **Autor:** Germán Garoz Tarjuelo  
+> **Tutor:** Diego Mondéjar Ruiz
+
+
+
 Reproduce todas las figuras y tablas de los capítulos 7 (experimentos
 sintéticos) y 8 (datos reales).
 
@@ -7,7 +15,7 @@ sintéticos) y 8 (datos reales).
 
 - `tda_minimo.py`: implementación propia de Vietoris–Rips y la
   reducción matricial sobre `F_2` para calcular diagramas de
-  persistencia. Funciona en `numpy` puro. Se usa como respaldo cuando
+  persistencia. Funciona en `numpy` puro. Se usa  cuando
   `ripser` no está instalado; lenta en nubes grandes.
 - `detector.py`: detector robusto de cambios basado en
   `mediana + k·MAD` con burn-in y exigencia de cruces consecutivos.
@@ -28,7 +36,7 @@ sintéticos) y 8 (datos reales).
   rejilla refinada de parámetros, proyecciones PCA).
 - `ejecutar_cap8.py`: análisis del crash de 2008 en detalle.
 - `ejecutar_cap8_eventos.py`: aplica el método de detección de cambios
-  a los seis eventos del catálogo y genera figura comparativa.
+  a los seis eventos del catálogo y generación figura comparativa.
 - `ejecutar_cap8_baseline.py`: compara la señal topológica con un
   baseline clásico (varianza móvil) para los mismos eventos.
 
@@ -95,11 +103,9 @@ preferencia:
 
 La conclusión metodológica no depende del origen exacto de los datos
 porque el método se basa en la geometría local de los retornos y no
-en su nivel absoluto. Aun así, **se recomienda al usuario reejecutar
-el código en su propio entorno con `yfinance` instalado y conexión a
-internet**, para que las cifras finales del TFG reflejen el dato real.
+en su nivel absoluto. 
 
-## Notas honestas
+## Notas 
 
 - Si `ripser` no se importa correctamente, el código avisa por consola
   y usa la implementación propia (`tda_minimo`). El resultado es el
