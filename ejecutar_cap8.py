@@ -9,8 +9,9 @@ Pipeline:
    posición de una ventana de longitud n, generar la nube SW correspondiente
    y calcular su diagrama de persistencia.
 4. Calcular la distancia bottleneck entre diagramas consecutivos.
-5. Detectar el cambio de régimen mediante un umbral basado en la media y la
-   desviación típica de los primeros valores.
+5. Detectar el cambio de régimen mediante un umbral robusto basado en
+   la mediana y la MAD del primer tramo (detector.py), con exigencia
+   de dos cruces consecutivos.
 """
 
 import os
@@ -20,6 +21,7 @@ import matplotlib.pyplot as plt
 
 import datos_reales as dr
 import tda_minimo as tda
+from detector import detector_robusto
 
 try:
     from ripser import ripser
@@ -129,7 +131,7 @@ def figura_distancias(df, indices, distancias, umbral, posicion_cambio_real,
     fig, ax = plt.subplots(figsize=(10, 4))
     ax.plot(fechas_diag, distancias, color="black", marker="o", ms=3, lw=0.8)
     ax.axhline(umbral, color="firebrick", ls="--", lw=0.8,
-                label=f"umbral = mu + 3 sigma = {umbral:.4f}")
+                label=f"umbral mediana+4·MAD = {umbral:.4f}")
     ax.axvline(pd.Timestamp("2008-09-15"), color="darkgreen",
                 ls=":", lw=1.0, label="Lehman (15-sep-2008)")
     if posicion_detectada is not None:
@@ -196,15 +198,15 @@ def main():
                   for k in range(len(diagramas) - 1)]
     distancias = np.array(distancias)
 
-    # Tramo de referencia: primer 25% de la señal
-    n_ref = max(5, len(distancias) // 4)
-    mu = distancias[:n_ref].mean()
-    sigma = distancias[:n_ref].std() + 1e-12
-    umbral = mu + 3 * sigma
-    print(f"[cap8] mu={mu:.5f}, sigma={sigma:.5f}, umbral={umbral:.5f}")
+    # Detector robusto: mediana + 4*MAD (mismo criterio que en el
+    # Cap 7 y en el análisis multi-evento del Cap 8).
+    res = detector_robusto(distancias, k=4.0, frac_ref=0.25,
+                            n_min_ref=15, burn_in=3, consecutivos=2)
+    umbral = float(res.umbral)
+    print(f"[cap8] mediana={res.mediana_ref:.5f}, "
+          f"MAD={res.mad_ref:.5f}, umbral={umbral:.5f}")
 
-    superados = np.where(distancias > umbral)[0]
-    posicion_detectada = int(superados[0]) if len(superados) > 0 else None
+    posicion_detectada = res.indice_detectado
     if posicion_detectada is not None:
         fecha_det = df.index[indices[posicion_detectada]]
         print(f"[cap8] Primer cambio detectado en ventana k={posicion_detectada}, "
