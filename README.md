@@ -6,7 +6,8 @@
 > **Autor:** Germán Garoz Tarjuelo  
 > **Tutor:** Diego Mondéjar Ruiz
 
-
+## Memoria
+📄 [TFG_German_VF.pdf](TFG_German_VF.pdf) — documento completo del trabajo.
 
 Reproduce todas las figuras y tablas de los capítulos 7 (experimentos
 sintéticos) y 8 (datos reales).
